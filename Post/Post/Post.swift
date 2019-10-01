@@ -18,4 +18,8 @@ struct Post: Codable {
         self.text = text
         self.timestamp = timestamp
     }
+    
+    var queryTimestamp: TimeInterval {
+        return self.timestamp - 0.00001
+    }
 }

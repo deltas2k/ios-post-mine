@@ -99,3 +99,13 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
         }
 
 }
+
+extension PostListViewController {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row >= postController.posts.count - 1 {
+            postController.fetchPosts(reset: false) {
+                self.reloadTableView()
+            }
+        }
+    }
+}
