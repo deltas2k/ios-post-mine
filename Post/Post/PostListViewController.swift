@@ -28,6 +28,10 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    @IBAction func addButtonTapped(_ sender: Any) {
+        presentNewPostAlert()
+    }
+    
     @objc func refreshControlPulled() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         postController.fetchPosts {
@@ -60,5 +64,38 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
         
         return cell
     }
+    
+    func presentNewPostAlert() {
+        let addAlertController = UIAlertController(title: "Post your message...", message: "", preferredStyle: .alert)
+        
+        var usernameTextField = UITextField()
+        addAlertController.addTextField { (usernameTF) in
+            usernameTF.placeholder = "Enter username..."
+            usernameTextField = usernameTF
+        }
+        
+        var messageTextField = UITextField()
+        addAlertController.addTextField { (messageTF) in
+            messageTF.placeholder = "Enter message..."
+            messageTextField = messageTF
+        }
+        
+        let postAction = UIAlertAction(title: "Post", style: .default) { (postAction) in
+            guard let username = usernameTextField.text,
+                !username.isEmpty,
+            let text = messageTextField.text,
+                !text.isEmpty else {return}
+        self.postController.addNewPostWith(username: username, text: text, completion: {
+            self.reloadTableView()
+        })
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            addAlertController.addAction(postAction)
+            addAlertController.addAction(cancelAction)
+            
+            self.present(addAlertController, animated: true, completion: nil)
+        
+        }
 
 }
